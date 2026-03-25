@@ -1,0 +1,431 @@
+**82 suggestions** (35 high, 31 medium, 16 low)
+
+# ReservationRepository.kt (10 suggestions)
+
+## Test: TestFindActiveByRoomIdWithNoActiveReservations
+**Category:** edge case
+**Priority:** high
+**Description:** Ensure that when there are no active reservations for a given room ID, the method returns an empty list. This is important to handle cases where a room is available and has no ongoing or upcoming bookings.
+
+## Test: TestFindByIdWithNonExistentId
+**Category:** edge case
+**Priority:** high
+**Description:** Ensure that when a non-existent reservation ID is provided, the method returns null. This tests the boundary condition of querying a reservation that does not exist in the repository.
+
+## Test: TestDeleteWithNonExistentId
+**Category:** edge case
+**Priority:** high
+**Description:** Ensure that when a non-existent reservation ID is deleted, the method returns false, indicating that no reservation was removed. This tests the boundary condition of deleting a non-existent record.
+
+## Test: TestFindByRoomIdWithNoReservations
+**Category:** edge case
+**Priority:** high
+**Description:** Ensure that when there are no reservations for a given room ID, the method returns an empty list. This is important to handle cases where a room has never been booked.
+
+## Test: TestFindByGuestEmailWithNoReservations
+**Category:** edge case
+**Priority:** high
+**Description:** Ensure that when there are no reservations for a given guest email, the method returns an empty list. This is important to handle cases where a guest has never made a reservation.
+
+## Test: TestFindActiveByRoomIdWithAllStatuses
+**Category:** happy path
+**Priority:** medium
+**Description:** Verify that the method correctly identifies and returns all active reservations for a given room ID, considering all valid active statuses (PENDING, CONFIRMED, CHECKED_IN).
+
+## Test: TestSaveWithExistingId
+**Category:** happy path
+**Priority:** medium
+**Description:** Verify that when a reservation with an existing ID is saved, it updates the existing record instead of creating a new one. This tests the idempotent nature of the save operation.
+
+## Test: TestSaveWithNullTotalPrice
+**Category:** edge case
+**Priority:** medium
+**Description:** Verify that a reservation can be saved with a null totalPrice. This tests the nullable field handling in the Reservation data class.
+
+## Test: TestSaveWithNullDiscountCode
+**Category:** edge case
+**Priority:** medium
+**Description:** Verify that a reservation can be saved with a null discountCode. This tests the nullable field handling in the Reservation data class.
+
+## Test: TestFindActiveByRoomIdWithCancelledReservation
+**Category:** edge case
+**Priority:** medium
+**Description:** Ensure that a reservation with a status of CANCELLED is not included in the list of active reservations for a given room ID. This tests the filtering logic for active statuses.
+
+# PricingCalculator.kt (13 suggestions)
+
+## Test: TestPricingCalculatorLongStayDiscount
+**Category:** edge case
+**Priority:** high
+**Description:** Tests the application of the long stay discount by verifying that the discount is correctly applied when the number of nights is exactly at the threshold (7 nights).
+
+## Test: TestPricingCalculatorExtendedStayDiscount
+**Category:** edge case
+**Priority:** high
+**Description:** Tests the application of the extended stay discount by verifying that the discount is correctly applied when the number of nights is exactly at the threshold (14 nights).
+
+## Test: TestPricingCalculatorInvalidDiscountCode
+**Category:** error handling
+**Priority:** high
+**Description:** Ensures that an invalid discount code does not affect the total price and that no discount is applied.
+
+## Test: TestPricingCalculatorMaxCombinedDiscountCap
+**Category:** edge case
+**Priority:** high
+**Description:** Tests the maximum combined discount percentage cap by applying multiple discounts and verifying that the total discount does not exceed 35%.
+
+## Test: TestPricingCalculatorNegativeNights
+**Category:** error handling
+**Priority:** high
+**Description:** Validates that the calculation handles negative nights gracefully by returning a total price of 0.0.
+
+## Test: TestPricingCalculatorCorporateEligibility
+**Category:** edge case
+**Priority:** high
+**Description:** Ensures that a corporate discount code is correctly applied only to corporate eligible room types and not to non-corporate eligible room types.
+
+## Test: TestPricingCalculatorDiscountCodeMaxUses
+**Category:** error handling
+**Priority:** high
+**Description:** Validates that a discount code with max uses reached does not apply any discount and does not increase the current uses counter.
+
+## Test: TestPricingCalculatorBaseRateCalculation
+**Category:** happy path
+**Priority:** medium
+**Description:** Validates that the base rate calculation is correct by comparing the calculated base price with the expected value for a given number of nights.
+
+## Test: TestPricingCalculatorSeasonalAdjustment
+**Category:** happy path
+**Priority:** medium
+**Description:** Ensures that the seasonal adjustments are correctly applied by comparing the calculated seasonal adjustment with the expected value for different seasons.
+
+## Test: TestPricingCalculatorDiscountCodeApplication
+**Category:** happy path
+**Priority:** medium
+**Description:** Validates that a valid discount code is correctly applied and reduces the total price as expected.
+
+## Test: TestPricingCalculatorZeroNights
+**Category:** edge case
+**Priority:** medium
+**Description:** Ensures that the calculation correctly handles zero nights by returning a total price of 0.0.
+
+## Test: TestPricingCalculatorSeasonBoundary
+**Category:** edge case
+**Priority:** medium
+**Description:** Validates that the seasonal adjustments are correctly applied at the boundaries between seasons (e.g., Dec 19 to Dec 20).
+
+## Test: TestPricingCalculatorNullDiscountCode
+**Category:** happy path
+**Priority:** low
+**Description:** Tests the calculation with a null discount code to ensure that it does not affect the total price.
+
+# ReservationService.kt (12 suggestions)
+
+## Test: TestCheckInDateBeforeCheckOutDate
+**Category:** error handling
+**Priority:** high
+**Description:** Ensures that the check-in date is strictly before the check-out date, as this is a critical validation rule. Test with check-in date equal to or after check-out date to verify proper exception handling.
+
+## Test: TestOccupancyExceedsRoomTypeMaxOccupancy
+**Category:** error handling
+**Priority:** high
+**Description:** Validates that the occupancy does not exceed the maximum occupancy allowed for the room type. Test with occupancy values that are higher than the room type's max occupancy to ensure an `IllegalArgumentException` is thrown.
+
+## Test: TestOccupancyLessThanOrEqualToZero
+**Category:** error handling
+**Priority:** high
+**Description:** Ensures that the occupancy is at least 1. Test with occupancy values less than or equal to zero to verify proper exception handling.
+
+## Test: TestRoomConflictWithExistingReservations
+**Category:** error handling
+**Priority:** high
+**Description:** Tests the scenario where a new reservation conflicts with existing active reservations for the same room. Use overlapping date ranges to ensure an `IllegalStateException` is thrown.
+
+## Test: TestReservationCancellationForCheckedInReservation
+**Category:** error handling
+**Priority:** high
+**Description:** Tests the scenario where a reservation cancellation is attempted for a reservation that is already checked in. Verify that an `IllegalStateException` is thrown.
+
+## Test: TestReservationCancellationForAlreadyCancelledReservation
+**Category:** error handling
+**Priority:** high
+**Description:** Ensures that a reservation cancellation is not allowed for a reservation that is already cancelled. Verify that an `IllegalStateException` is thrown.
+
+## Test: TestPricingCalculationWithDiscount
+**Category:** happy path
+**Priority:** medium
+**Description:** Validates that the pricing calculation correctly applies a discount code. Use a valid discount code and verify that the total price is calculated with the discount applied.
+
+## Test: TestPricingCalculationWithoutDiscount
+**Category:** happy path
+**Priority:** medium
+**Description:** Ensures that the pricing calculation works correctly without a discount code. Use a request without a discount code and verify that the total price is calculated without any discount.
+
+## Test: TestReservationCancellationSuccess
+**Category:** happy path
+**Priority:** medium
+**Description:** Validates the successful cancellation of a reservation that is neither checked in nor cancelled. Ensure that the reservation status is updated to `CANCELLED` and that a cancellation confirmation notification is sent.
+
+## Test: TestGetReservationByIdNotFound
+**Category:** error handling
+**Priority:** medium
+**Description:** Tests the scenario where a reservation is not found by ID. Verify that `null` is returned.
+
+## Test: TestGetReservationsForNonExistentGuest
+**Category:** error handling
+**Priority:** medium
+**Description:** Ensures that an empty list is returned when there are no reservations for a non-existent guest email.
+
+## Test: TestGenerateIdUniqueness
+**Category:** edge case
+**Priority:** low
+**Description:** Tests the uniqueness of generated reservation IDs by creating multiple reservations and verifying that each ID is unique.
+
+# DiscountCode.kt (9 suggestions)
+
+## Test: ValidateDiscountCodeExpiry
+**Category:** error handling
+**Priority:** high
+**Description:** Ensure that a discount code is not applicable if the current date is outside the validFrom and validUntil range. Test with a code that is expired, not yet valid, and currently valid to verify correct behavior.
+
+## Test: ValidateDiscountCodeMaxUsesExceeded
+**Category:** error handling
+**Priority:** high
+**Description:** Verify that a discount code cannot be applied if the currentUses have reached or exceeded the maxUses limit. Test with a code where currentUses equals maxUses and where it exceeds maxUses to ensure the code is not applicable.
+
+## Test: ValidateDiscountCodeNegativeDiscountPercent
+**Category:** error handling
+**Priority:** high
+**Description:** Ensure that a discount code with a negative discountPercent is not applicable, as it would result in an increase in price. Test with a code that has a negative discountPercent to verify it is not applied.
+
+## Test: ValidateDiscountCodeZeroDiscountPercent
+**Category:** edge case
+**Priority:** medium
+**Description:** Verify that a discount code with a zero discountPercent is applicable but does not alter the price. Test with a code that has a zero discountPercent to ensure it is applied without any discount.
+
+## Test: ValidateDiscountCodeMaxIntMaxUses
+**Category:** edge case
+**Priority:** medium
+**Description:** Ensure that a discount code with maxUses set to Int.MAX_VALUE is applicable without any limit on uses. Test with a code that has maxUses set to Int.MAX_VALUE to verify it can be applied indefinitely.
+
+## Test: ValidateDiscountCodeMinNightsCondition
+**Category:** boundary condition
+**Priority:** medium
+**Description:** Verify that a discount code is not applicable if the number of nights is less than the minNights requirement. Test with a code that has a minNights value and verify it is not applicable for fewer nights than required.
+
+## Test: ValidateDiscountCodeCorporateEligibility
+**Category:** edge case
+**Priority:** medium
+**Description:** Ensure that a discount code marked as corporate is only applicable to corporate bookings. Test with a code that is marked as corporate and verify it is not applicable for non-corporate bookings.
+
+## Test: ValidateDiscountCodeEqualityWithMutableFields
+**Category:** edge case
+**Priority:** low
+**Description:** Verify that the `equals` and `hashCode` methods in the DiscountCode data class handle mutable fields correctly, especially `currentUses`. Test with two codes that differ only in `currentUses` to ensure they are considered equal.
+
+## Test: ValidateDiscountCodeCopySemantics
+**Category:** edge case
+**Priority:** low
+**Description:** Ensure that the `copy` function in the DiscountCode data class creates a shallow copy, meaning changes to mutable fields like `currentUses` in the copied instance do not affect the original instance. Test by modifying `currentUses` in a copied instance and verify the original instance remains unchanged.
+
+# Reservation.kt (5 suggestions)
+
+## Test: TestReservationTotalPriceNullability
+**Category:** error handling
+**Priority:** high
+**Description:** Ensure that the `totalPrice` field being null does not cause issues when calculating or accessing other reservation-related values. This test should verify that any operations relying on `totalPrice` handle null values gracefully, such as avoiding NPEs and returning default values or error messages.
+
+## Test: TestReservationCheckInBeforeCheckOut
+**Category:** boundary condition
+**Priority:** high
+**Description:** Validate that the `checkIn` date is always before or equal to the `checkOut` date. This test should cover edge cases where `checkIn` and `checkOut` are the same day, as well as scenarios where `checkIn` is after `checkOut`, which should be invalid.
+
+## Test: TestReservationOccupancyValidation
+**Category:** boundary condition
+**Priority:** medium
+**Description:** Ensure that the `occupancy` field is within a reasonable range for a hotel room. This test should cover edge cases such as the minimum and maximum occupancy values allowed for different room types, and verify that values outside this range are handled appropriately.
+
+## Test: TestReservationStatusDefault
+**Category:** happy path
+**Priority:** low
+**Description:** Verify that the default value for the `status` field is `BookingStatus.PENDING` when a new `Reservation` object is created without explicitly setting the status. This test ensures that the default behavior aligns with the expected initial state of a reservation.
+
+## Test: TestReservationCreatedAtDefault
+**Category:** happy path
+**Priority:** low
+**Description:** Confirm that the `createdAt` field is automatically set to the current time when a new `Reservation` object is created without explicitly setting this field. This test ensures that the timestamp is correctly captured at the time of reservation creation.
+
+# RoomType.kt (9 suggestions)
+
+## Test: ValidateCorporateEligibilityForStandardRoom
+**Category:** edge case
+**Priority:** high
+**Description:** Verify that the `isCorporateEligible` function correctly identifies the STANDARD room type as not eligible for corporate rates. This test will check that `STANDARD.isCorporateEligible()` returns `false`.
+
+## Test: ValidateRoomTypeExhaustiveness
+**Category:** error handling
+**Priority:** high
+**Description:** Ensure that the `RoomType` enum is exhaustive and that any future additions to the enum do not break the `isCorporateEligible` function. This test will use a `when` expression to cover all enum cases and assert that no cases are missed.
+
+## Test: ValidateCorporateEligibilityForDeluxeRoom
+**Category:** happy path
+**Priority:** medium
+**Description:** Ensure that the `isCorporateEligible` function correctly identifies the DELUXE room type as eligible for corporate rates. This test will check that `DELUXE.isCorporateEligible()` returns `true`.
+
+## Test: ValidateCorporateEligibilityForSuiteRoom
+**Category:** happy path
+**Priority:** medium
+**Description:** Ensure that the `isCorporateEligible` function correctly identifies the SUITE room type as eligible for corporate rates. This test will check that `SUITE.isCorporateEligible()` returns `true`.
+
+## Test: ValidateCorporateEligibilityForPenthouseRoom
+**Category:** happy path
+**Priority:** medium
+**Description:** Ensure that the `isCorporateEligible` function correctly identifies the PENTHOUSE room type as eligible for corporate rates. This test will check that `PENTHOUSE.isCorporateEligible()` returns `true`.
+
+## Test: ValidateRoomTypeBaseRateValues
+**Category:** happy path
+**Priority:** low
+**Description:** Ensure that the base rate values for each room type are correctly set as per the business logic. This test will verify that the base rates match the expected values for STANDARD, DELUXE, SUITE, and PENTHOUSE room types.
+
+## Test: ValidateRoomTypeMaxOccupancyValues
+**Category:** happy path
+**Priority:** low
+**Description:** Ensure that the maximum occupancy values for each room type are correctly set as per the business logic. This test will verify that the maximum occupancies match the expected values for STANDARD, DELUXE, SUITE, and PENTHOUSE room types.
+
+## Test: ValidateRoomTypeEquality
+**Category:** happy path
+**Priority:** low
+**Description:** Ensure that the `equals` and `hashCode` methods for `RoomType` work correctly. This test will compare different instances of `RoomType` to verify that equality checks and hash code generation are consistent with the enum values.
+
+## Test: ValidateRoomTypeCopy
+**Category:** happy path
+**Priority:** low
+**Description:** Ensure that the `copy` method for `RoomType` works correctly. This test will attempt to copy a `RoomType` instance and verify that the copied instance has the same base rate and maximum occupancy values as the original.
+
+# PricingResult.kt (8 suggestions)
+
+## Test: TestPricingResultNegativeBasePrice
+**Category:** error handling
+**Priority:** high
+**Description:** This test checks the behavior when `basePrice` is negative. The test should set `basePrice` to a negative value and verify that the `totalPrice` is calculated correctly, considering the negative base price.
+
+## Test: TestPricingResultNegativeSeasonalAdjustment
+**Category:** error handling
+**Priority:** high
+**Description:** This test checks the behavior when `seasonalAdjustment` is negative. The test should set `seasonalAdjustment` to a negative value and verify that the `totalPrice` is calculated correctly, considering the negative seasonal adjustment.
+
+## Test: TestPricingResultNegativeLengthOfStayDiscount
+**Category:** error handling
+**Priority:** high
+**Description:** This test checks the behavior when `lengthOfStayDiscount` is negative. The test should set `lengthOfStayDiscount` to a negative value and verify that the `totalPrice` is calculated correctly, considering the negative length of stay discount.
+
+## Test: TestPricingResultNegativeDiscountCodeReduction
+**Category:** error handling
+**Priority:** high
+**Description:** This test checks the behavior when `discountCodeReduction` is negative. The test should set `discountCodeReduction` to a negative value and verify that the `totalPrice` is calculated correctly, considering the negative discount code reduction.
+
+## Test: TestPricingResultZeroValues
+**Category:** edge case
+**Priority:** medium
+**Description:** This test checks the behavior when all components (`basePrice`, `seasonalAdjustment`, `lengthOfStayDiscount`, `discountCodeReduction`) are zero. The test should verify that the `totalPrice` is zero.
+
+## Test: TestPricingResultAppliedDiscountsEmptyList
+**Category:** edge case
+**Priority:** medium
+**Description:** This test checks the behavior when `appliedDiscounts` is an empty list. The test should verify that the `totalPrice` is calculated correctly without any applied discounts.
+
+## Test: TestPricingResultTotalPriceCalculation
+**Category:** happy path
+**Priority:** low
+**Description:** This test verifies that the `totalPrice` is correctly calculated as the sum of `basePrice`, `seasonalAdjustment`, `lengthOfStayDiscount`, and `discountCodeReduction`. The test should use positive values for each component and ensure that the `totalPrice` matches the expected sum.
+
+## Test: TestPricingResultAppliedDiscountsNonEmptyList
+**Category:** happy path
+**Priority:** low
+**Description:** This test checks the behavior when `appliedDiscounts` is a non-empty list. The test should verify that the `totalPrice` is calculated correctly and that the list of applied discounts is correctly populated.
+
+# Season.kt (3 suggestions)
+
+## Test: TestSeasonRateMultiplierExhaustiveness
+**Category:** error handling
+**Priority:** high
+**Description:** Ensure that all enum values in the `Season` enum are accounted for in any `when` expression that uses `Season`. This test prevents future additions to the `Season` enum from breaking existing code that relies on exhaustive pattern matching.
+
+## Test: TestSeasonRateMultiplierOrder
+**Category:** boundary condition
+**Priority:** medium
+**Description:** Verify that the order of the `Season` enum values is consistent with the expected business logic. For example, `LOW` should have the lowest multiplier, and `PEAK` should have the highest. This test ensures that the enum values are ordered correctly for any logic that depends on the sequence of seasons.
+
+## Test: TestSeasonRateMultiplierValues
+**Category:** happy path
+**Priority:** low
+**Description:** Verify that each season has the correct rate multiplier value. This test ensures that the rate multipliers are set as expected, which is crucial for accurate pricing calculations.
+
+# BookingStatus.kt (4 suggestions)
+
+## Test: TestBookingStatusExhaustiveness
+**Category:** error handling
+**Priority:** high
+**Description:** Ensure that all possible cases of `BookingStatus` are handled in `when` expressions to prevent future additions to the enum from breaking existing logic. This test should verify that any new status added to the enum will require corresponding updates in all `when` expressions throughout the codebase.
+
+## Test: TestBookingStatusStringRepresentation
+**Category:** happy path
+**Priority:** medium
+**Description:** Verify that the string representation of each `BookingStatus` is as expected. This test should check that calling `toString()` on each enum value returns the correct string.
+
+## Test: TestBookingStatusEquality
+**Category:** happy path
+**Priority:** medium
+**Description:** Ensure that the equality checks for `BookingStatus` work correctly. This test should verify that comparing two instances of the same `BookingStatus` returns true, and comparing different `BookingStatus` values returns false.
+
+## Test: TestBookingStatusOrder
+**Category:** happy path
+**Priority:** low
+**Description:** Verify that the order of `BookingStatus` values is consistent. This test should check that the order of the enum values is as defined in the code, which can be important for sorting or ordering operations.
+
+# NotificationService.kt (9 suggestions)
+
+## Test: TestRateLimitExceededExceptionHandling
+**Category:** error handling
+**Priority:** high
+**Description:** Ensure that when the rate limit is exceeded, a `RateLimitExceededException` is thrown immediately without retrying. This tests the correct handling of rate limit violations.
+
+## Test: TestSendWithRetryMaxRetriesExhausted
+**Category:** error handling
+**Priority:** high
+**Description:** Verify that when all retries are exhausted due to an exception, the function returns `false`. This tests the retry mechanism and its failure scenario.
+
+## Test: TestSendWithRetryNoRetriesOnRateLimit
+**Category:** error handling
+**Priority:** high
+**Description:** Confirm that no retries occur when a `RateLimitExceededException` is thrown, and the function immediately returns `false`. This tests the rate limit exception handling.
+
+## Test: TestDoSendWithBlankEmail
+**Category:** error handling
+**Priority:** high
+**Description:** Ensure that an `IllegalArgumentException` is thrown when the recipient email is blank. This tests the input validation in the `doSend` function.
+
+## Test: TestCheckRateLimitWithNoNotifications
+**Category:** edge case
+**Priority:** medium
+**Description:** Check that the rate limit check returns `true` when no notifications have been sent in the last minute. This tests the rate limit logic with an empty list.
+
+## Test: TestCheckRateLimitWithFullRateLimit
+**Category:** edge case
+**Priority:** medium
+**Description:** Ensure that the rate limit check returns `false` when the number of notifications sent in the last minute equals the rate limit. This tests the rate limit boundary condition.
+
+## Test: TestRenderConfirmationTemplateWithNoTotalPrice
+**Category:** edge case
+**Priority:** medium
+**Description:** Verify that the confirmation template correctly handles a `null` `totalPrice` by displaying "TBD". This tests the template rendering with missing data.
+
+## Test: TestRenderCancellationTemplate
+**Category:** happy path
+**Priority:** low
+**Description:** Confirm that the cancellation template is correctly rendered with all reservation details. This tests the template rendering logic.
+
+## Test: TestGetSentNotifications
+**Category:** happy path
+**Priority:** low
+**Description:** Verify that the `getSentNotifications` function returns a copy of the sent notifications list. This tests the immutability of the returned list.
